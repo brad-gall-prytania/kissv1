@@ -1,0 +1,61 @@
+name: Deploy to Azure Web App
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AZURE_WEBAPP_NAME: kissv1-bgall # Replace with your Web App name
+  NODE_VERSION: "20"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Build Next.js (standalone)
+        run: npm run build
+        env:
+          # Placeholders — actual values are set as App Settings on Azure
+          AZURE_SQL_SERVER: placeholder
+          AZURE_SQL_DATABASE: placeholder
+          AZURE_SQL_USER: placeholder
+          AZURE_SQL_PASSWORD: placeholder
+          AUTH_SECRET: placeholder
+          AUTH_MICROSOFT_ENTRA_ID_ID: placeholder
+          AUTH_MICROSOFT_ENTRA_ID_SECRET: placeholder
+          AUTH_MICROSOFT_ENTRA_ID_ISSUER: placeholder
+
+      - name: Prepare standalone package
+        run: |
+          cp -r public .next/standalone/public
+          cp -r .next/static .next/standalone/.next/static
+
+      - name: Zip artifact
+        run: |
+          cd .next/standalone
+          zip -qr ../../deploy.zip .
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          package: deploy.zip
