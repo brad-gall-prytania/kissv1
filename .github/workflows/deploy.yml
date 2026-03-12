@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  AZURE_WEBAPP_NAME: kissv1-bgall # Replace with your Web App name
+  AZURE_WEBAPP_NAME: kissv1
   NODE_VERSION: "20"
 
 jobs:
