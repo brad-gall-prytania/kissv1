@@ -12,7 +12,7 @@ export default async function HomePage() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">Contacts</h2>
+        <h2 className="text-xl font-semibold text-prytania-dark">Contacts</h2>
       </div>
       <ContactsTable initialContacts={contacts} />
     </div>

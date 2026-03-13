@@ -69,7 +69,7 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-prytania-dark/60">
           {contacts.length} contact{contacts.length !== 1 ? "s" : ""}
         </p>
         <Button onClick={() => setShowForm(true)}>Add Contact</Button>
@@ -82,8 +82,8 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
       )}
 
       {!loading && contacts.length === 0 && (
-        <div className="rounded-lg border border-dashed border-gray-300 py-12 text-center">
-          <p className="text-sm text-gray-500">No contacts yet.</p>
+        <div className="rounded-lg border border-dashed border-prytania-green/30 py-12 text-center">
+          <p className="text-sm text-prytania-dark/60">No contacts yet.</p>
           <Button
             variant="ghost"
             className="mt-2"
@@ -97,7 +97,7 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
       {!loading && contacts.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="w-full text-left text-sm">
-            <thead className="bg-gray-50 text-xs uppercase text-gray-500">
+            <thead className="bg-prytania-green-light text-xs uppercase text-prytania-dark/70">
               <tr>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Email</th>
@@ -109,14 +109,14 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
             </thead>
             <tbody className="divide-y divide-gray-200">
               {contacts.map((c) => (
-                <tr key={c.id} className="hover:bg-gray-50">
-                  <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-900">
+                <tr key={c.id} className="hover:bg-prytania-green-light/50">
+                  <td className="whitespace-nowrap px-4 py-3 font-medium text-prytania-dark">
                     {c.first_name} {c.last_name}
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{c.email}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.phone}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.company}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.job_title}</td>
+                  <td className="px-4 py-3 text-prytania-dark/70">{c.email}</td>
+                  <td className="px-4 py-3 text-prytania-dark/70">{c.phone}</td>
+                  <td className="px-4 py-3 text-prytania-dark/70">{c.company}</td>
+                  <td className="px-4 py-3 text-prytania-dark/70">{c.job_title}</td>
                   <td className="whitespace-nowrap px-4 py-3 text-right">
                     <Button
                       variant="ghost"

@@ -3,10 +3,10 @@
 import { ButtonHTMLAttributes, forwardRef } from "react";
 
 const variants = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700",
+  primary: "bg-prytania-green text-white hover:bg-prytania-green-dark",
   secondary: "bg-gray-100 text-gray-700 hover:bg-gray-200",
   danger: "bg-red-600 text-white hover:bg-red-700",
-  ghost: "text-gray-600 hover:bg-gray-100",
+  ghost: "text-gray-600 hover:bg-prytania-green-light hover:text-prytania-green-dark",
 } as const;
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

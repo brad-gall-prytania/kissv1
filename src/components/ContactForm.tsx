@@ -105,7 +105,7 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             {error}
           </p>
         )}
@@ -191,7 +191,7 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
           placeholder="Any additional notes..."
         />
 
-        <div className="flex justify-end gap-3 border-t border-gray-200 pt-4">
+        <div className="flex justify-end gap-3 border-t border-prytania-green/20 pt-4">
           <Button variant="secondary" type="button" onClick={onClose}>
             Cancel
           </Button>

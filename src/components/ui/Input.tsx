@@ -15,7 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="mb-1 block text-sm font-medium text-prytania-dark"
           >
             {label}
           </label>
@@ -23,7 +23,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <input
           ref={ref}
           id={inputId}
-          className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${error ? "border-red-500" : ""} ${className}`}
+          className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-prytania-dark placeholder:text-gray-400 focus:border-prytania-green focus:outline-none focus:ring-1 focus:ring-prytania-green ${error ? "border-red-500" : ""} ${className}`}
           {...props}
         />
         {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
@@ -47,7 +47,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="mb-1 block text-sm font-medium text-gray-700"
+            className="mb-1 block text-sm font-medium text-prytania-dark"
           >
             {label}
           </label>
@@ -56,7 +56,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={inputId}
           rows={3}
-          className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 ${error ? "border-red-500" : ""} ${className}`}
+          className={`w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-prytania-dark placeholder:text-gray-400 focus:border-prytania-green focus:outline-none focus:ring-1 focus:ring-prytania-green ${error ? "border-red-500" : ""} ${className}`}
           {...props}
         />
         {error && <p className="mt-1 text-xs text-red-600">{error}</p>}

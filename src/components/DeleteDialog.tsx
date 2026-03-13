@@ -31,9 +31,9 @@ export function DeleteDialog({ open, onClose, onConfirm, contact }: DeleteDialog
 
   return (
     <Modal open={open} onClose={onClose} title="Delete Contact" size="sm">
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-prytania-dark/70">
         Are you sure you want to delete{" "}
-        <span className="font-medium text-gray-900">
+        <span className="font-medium text-prytania-dark">
           {contact.first_name} {contact.last_name}
         </span>
         ? This action cannot be undone.
