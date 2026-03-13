@@ -43,6 +43,7 @@ jobs:
         run: |
           cp -r public .next/standalone/public
           cp -r .next/static .next/standalone/.next/static
+          echo '{"name":"kissv1","scripts":{"start":"node server.js"}}' > .next/standalone/package.json
 
       - name: Zip artifact
         run: |
