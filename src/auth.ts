@@ -9,7 +9,8 @@ async function fetchUserRole(accessToken: string): Promise<UserRole> {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     if (!res.ok) {
-      console.error("Graph memberOf call failed:", res.status);
+      const body = await res.text();
+      console.error(`[KISS-RBAC] Graph /me/memberOf failed: ${res.status} ${res.statusText}`, body);
       return "none";
     }
     const data = await res.json();
@@ -17,11 +18,15 @@ async function fetchUserRole(accessToken: string): Promise<UserRole> {
       .filter((entry: Record<string, unknown>) => entry["@odata.type"] === "#microsoft.graph.group")
       .map((g: Record<string, unknown>) => g.displayName as string);
 
+    console.log("[KISS-RBAC] User belongs to groups:", groupNames);
+
     if (groupNames.includes("kiss_admin")) return "admin";
     if (groupNames.includes("kiss_readers")) return "reader";
+
+    console.warn("[KISS-RBAC] User not in kiss_admin or kiss_readers. Groups found:", groupNames);
     return "none";
   } catch (err) {
-    console.error("Error fetching group membership:", err);
+    console.error("[KISS-RBAC] Error fetching group membership:", err);
     return "none";
   }
 }
