@@ -10,9 +10,10 @@ import { Spinner } from "./ui/Spinner";
 
 interface ContactsTableProps {
   initialContacts: Contact[];
+  canWrite: boolean;
 }
 
-export function ContactsTable({ initialContacts }: ContactsTableProps) {
+export function ContactsTable({ initialContacts, canWrite }: ContactsTableProps) {
   const router = useRouter();
   const [contacts, setContacts] = useState<Contact[]>(initialContacts);
   const [showForm, setShowForm] = useState(false);
@@ -72,7 +73,9 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
         <p className="text-sm text-prytania-dark/60">
           {contacts.length} contact{contacts.length !== 1 ? "s" : ""}
         </p>
-        <Button onClick={() => setShowForm(true)}>Add Contact</Button>
+        {canWrite && (
+          <Button onClick={() => setShowForm(true)}>Add Contact</Button>
+        )}
       </div>
 
       {loading && (
@@ -84,13 +87,15 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
       {!loading && contacts.length === 0 && (
         <div className="rounded-lg border border-dashed border-prytania-green/30 py-12 text-center">
           <p className="text-sm text-prytania-dark/60">No contacts yet.</p>
-          <Button
-            variant="ghost"
-            className="mt-2"
-            onClick={() => setShowForm(true)}
-          >
-            Add your first contact
-          </Button>
+          {canWrite && (
+            <Button
+              variant="ghost"
+              className="mt-2"
+              onClick={() => setShowForm(true)}
+            >
+              Add your first contact
+            </Button>
+          )}
         </div>
       )}
 
@@ -104,7 +109,7 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
                 <th className="px-4 py-3">Phone</th>
                 <th className="px-4 py-3">Company</th>
                 <th className="px-4 py-3">Job Title</th>
-                <th className="px-4 py-3 text-right">Actions</th>
+                {canWrite && <th className="px-4 py-3 text-right">Actions</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -117,25 +122,27 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
                   <td className="px-4 py-3 text-prytania-dark/70">{c.phone}</td>
                   <td className="px-4 py-3 text-prytania-dark/70">{c.company}</td>
                   <td className="px-4 py-3 text-prytania-dark/70">{c.job_title}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right">
-                    <Button
-                      variant="ghost"
-                      className="mr-1"
-                      onClick={() => {
-                        setEditingContact(c);
-                        setShowForm(true);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="text-red-600 hover:text-red-700"
-                      onClick={() => setDeletingContact(c)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
+                  {canWrite && (
+                    <td className="whitespace-nowrap px-4 py-3 text-right">
+                      <Button
+                        variant="ghost"
+                        className="mr-1"
+                        onClick={() => {
+                          setEditingContact(c);
+                          setShowForm(true);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        className="text-red-600 hover:text-red-700"
+                        onClick={() => setDeletingContact(c)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -143,24 +150,28 @@ export function ContactsTable({ initialContacts }: ContactsTableProps) {
         </div>
       )}
 
-      {/* Add / Edit modal */}
-      <ContactForm
-        open={showForm}
-        onClose={() => {
-          setShowForm(false);
-          setEditingContact(null);
-        }}
-        onSave={editingContact ? handleUpdate : handleCreate}
-        contact={editingContact}
-      />
+      {/* Add / Edit modal — only rendered for admins */}
+      {canWrite && (
+        <ContactForm
+          open={showForm}
+          onClose={() => {
+            setShowForm(false);
+            setEditingContact(null);
+          }}
+          onSave={editingContact ? handleUpdate : handleCreate}
+          contact={editingContact}
+        />
+      )}
 
-      {/* Delete confirmation */}
-      <DeleteDialog
-        open={!!deletingContact}
-        onClose={() => setDeletingContact(null)}
-        onConfirm={handleDelete}
-        contact={deletingContact}
-      />
+      {/* Delete confirmation — only rendered for admins */}
+      {canWrite && (
+        <DeleteDialog
+          open={!!deletingContact}
+          onClose={() => setDeletingContact(null)}
+          onConfirm={handleDelete}
+          contact={deletingContact}
+        />
+      )}
     </div>
   );
 }

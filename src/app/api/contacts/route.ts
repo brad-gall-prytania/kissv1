@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/auth";
 import { getAllContacts, createContact } from "@/lib/contacts";
+import { getSessionRole, forbidden } from "@/lib/roles";
 import type { ContactInput } from "@/lib/types";
 
 export async function GET() {
-  const session = await auth();
+  const { session, role } = await getSessionRole();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (role === "none") return forbidden();
 
   const contacts = await getAllContacts();
   return NextResponse.json(contacts);
 }
 
 export async function POST(req: NextRequest) {
-  const session = await auth();
+  const { session, role } = await getSessionRole();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if (role !== "admin") return forbidden();
 
   const body: ContactInput = await req.json();
 

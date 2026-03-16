@@ -1,3 +1,5 @@
+import type { UserRole } from "@/auth";
+
 export interface Contact {
   id: number;
   first_name: string;
@@ -16,3 +18,15 @@ export interface Contact {
 }
 
 export type ContactInput = Omit<Contact, "id" | "created_at" | "updated_at">;
+
+// Extend NextAuth session type
+declare module "next-auth" {
+  interface Session {
+    user: {
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      role: UserRole;
+    };
+  }
+}

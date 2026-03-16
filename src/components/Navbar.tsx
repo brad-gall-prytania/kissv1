@@ -1,9 +1,18 @@
 import { auth, signOut } from "@/auth";
+import type { UserRole } from "@/auth";
 
 export async function Navbar() {
   const session = await auth();
 
   if (!session?.user) return null;
+
+  const role = (session.user as Record<string, unknown>)?.role as UserRole ?? "none";
+  const roleBadge =
+    role === "admin"
+      ? { label: "Admin", color: "bg-prytania-green text-white" }
+      : role === "reader"
+        ? { label: "Reader", color: "bg-gray-600 text-white" }
+        : { label: "No Access", color: "bg-red-700 text-white" };
 
   return (
     <nav className="bg-prytania-nav px-4 py-3">
@@ -21,6 +30,11 @@ export async function Navbar() {
           </h1>
         </div>
         <div className="flex items-center gap-4">
+          <span
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${roleBadge.color}`}
+          >
+            {roleBadge.label}
+          </span>
           <span className="text-sm text-gray-300">{session.user.email}</span>
           <form
             action={async () => {
