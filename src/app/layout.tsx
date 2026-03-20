@@ -3,6 +3,7 @@ import { Exo, Lato } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Navbar } from "@/components/Navbar";
+import { NavTabs } from "@/components/NavTabs";
 
 const exo = Exo({
   variable: "--font-exo",
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body className={`${exo.variable} ${lato.variable} antialiased`}>
         <Providers>
           <Navbar />
+          <NavTabs />
           <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
         </Providers>
       </body>

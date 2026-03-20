@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import type { Contact } from "@/lib/types";
 import { Modal } from "./ui/Modal";
 import { Button } from "./ui/Button";
 
@@ -9,10 +8,11 @@ interface DeleteDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: () => Promise<void>;
-  contact: Contact | null;
+  itemName: string;
+  itemType?: string;
 }
 
-export function DeleteDialog({ open, onClose, onConfirm, contact }: DeleteDialogProps) {
+export function DeleteDialog({ open, onClose, onConfirm, itemName, itemType = "item" }: DeleteDialogProps) {
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
@@ -27,16 +27,12 @@ export function DeleteDialog({ open, onClose, onConfirm, contact }: DeleteDialog
     }
   }
 
-  if (!contact) return null;
-
   return (
-    <Modal open={open} onClose={onClose} title="Delete Contact" size="sm">
+    <Modal open={open} onClose={onClose} title={`Delete ${itemType}`} size="sm">
       <p className="text-sm text-prytania-dark/70">
         Are you sure you want to delete{" "}
-        <span className="font-medium text-prytania-dark">
-          {contact.first_name} {contact.last_name}
-        </span>
-        ? This action cannot be undone.
+        <span className="font-medium text-prytania-dark">{itemName}</span>?
+        This action cannot be undone.
       </p>
       <div className="mt-6 flex justify-end gap-3">
         <Button variant="secondary" onClick={onClose}>

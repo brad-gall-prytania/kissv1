@@ -1,11 +1,10 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { getAllContacts } from "@/lib/contacts";
 import { getAllCompanies } from "@/lib/companies";
-import { ContactsTable } from "@/components/ContactsTable";
+import { CompaniesTable } from "@/components/CompaniesTable";
 import type { UserRole } from "@/auth";
 
-export default async function HomePage() {
+export default async function CompaniesPage() {
   const session = await auth();
   if (!session) redirect("/login");
 
@@ -23,21 +22,14 @@ export default async function HomePage() {
     );
   }
 
-  const [contacts, companies] = await Promise.all([
-    getAllContacts(),
-    getAllCompanies(),
-  ]);
+  const companies = await getAllCompanies();
 
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-xl font-semibold text-prytania-dark">Contacts</h2>
+        <h2 className="text-xl font-semibold text-prytania-dark">Companies</h2>
       </div>
-      <ContactsTable
-        initialContacts={contacts}
-        companies={companies}
-        canWrite={role === "admin"}
-      />
+      <CompaniesTable initialCompanies={companies} canWrite={role === "admin"} />
     </div>
   );
 }

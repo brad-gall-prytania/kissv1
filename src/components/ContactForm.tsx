@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Contact, ContactInput } from "@/lib/types";
+import type { Contact, ContactInput, Company } from "@/lib/types";
 import { Modal } from "./ui/Modal";
 import { Input, Textarea } from "./ui/Input";
 import { Button } from "./ui/Button";
@@ -11,7 +11,7 @@ const EMPTY: ContactInput = {
   last_name: "",
   email: "",
   phone: "",
-  company: "",
+  company_id: null,
   job_title: "",
   address: "",
   city: "",
@@ -25,9 +25,10 @@ interface ContactFormProps {
   onClose: () => void;
   onSave: (data: ContactInput) => Promise<void>;
   contact?: Contact | null;
+  companies: Company[];
 }
 
-export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps) {
+export function ContactForm({ open, onClose, onSave, contact, companies }: ContactFormProps) {
   const [form, setForm] = useState<ContactInput>(
     contact
       ? {
@@ -35,7 +36,7 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
           last_name: contact.last_name,
           email: contact.email,
           phone: contact.phone,
-          company: contact.company,
+          company_id: contact.company_id,
           job_title: contact.job_title,
           address: contact.address,
           city: contact.city,
@@ -60,7 +61,7 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
             last_name: contact.last_name,
             email: contact.email,
             phone: contact.phone,
-            company: contact.company,
+            company_id: contact.company_id,
             job_title: contact.job_title,
             address: contact.address,
             city: contact.city,
@@ -73,7 +74,7 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
     setError("");
   }
 
-  function set(field: keyof ContactInput, value: string) {
+  function set(field: keyof ContactInput, value: string | number | null) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
@@ -142,12 +143,25 @@ export function ContactForm({ open, onClose, onSave, contact }: ContactFormProps
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Input
-            label="Company"
-            value={form.company}
-            onChange={(e) => set("company", e.target.value)}
-            placeholder="Acme Corp"
-          />
+          <div>
+            <label className="mb-1 block text-sm font-medium text-prytania-dark">
+              Company
+            </label>
+            <select
+              value={form.company_id ?? ""}
+              onChange={(e) =>
+                set("company_id", e.target.value ? parseInt(e.target.value) : null)
+              }
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-prytania-dark focus:border-prytania-green focus:outline-none focus:ring-1 focus:ring-prytania-green"
+            >
+              <option value="">— None —</option>
+              {companies.map((co) => (
+                <option key={co.id} value={co.id}>
+                  {co.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <Input
             label="Job Title"
             value={form.job_title}

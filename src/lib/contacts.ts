@@ -6,7 +6,12 @@ export async function getAllContacts(): Promise<Contact[]> {
   const pool = await getDb();
   const result = await pool
     .request()
-    .query<Contact>("SELECT * FROM contacts_tbl ORDER BY last_name, first_name");
+    .query<Contact>(
+      `SELECT c.*, co.name AS company_name
+       FROM contacts_tbl c
+       LEFT JOIN companies_tbl co ON co.id = c.company_id
+       ORDER BY c.last_name, c.first_name`
+    );
   return result.recordset;
 }
 
@@ -15,7 +20,12 @@ export async function getContactById(id: number): Promise<Contact | null> {
   const result = await pool
     .request()
     .input("id", sql.Int, id)
-    .query<Contact>("SELECT * FROM contacts_tbl WHERE id = @id");
+    .query<Contact>(
+      `SELECT c.*, co.name AS company_name
+       FROM contacts_tbl c
+       LEFT JOIN companies_tbl co ON co.id = c.company_id
+       WHERE c.id = @id`
+    );
   return result.recordset[0] || null;
 }
 
@@ -27,7 +37,7 @@ export async function createContact(data: ContactInput): Promise<Contact> {
     .input("last_name", sql.NVarChar, data.last_name)
     .input("email", sql.NVarChar, data.email)
     .input("phone", sql.NVarChar, data.phone)
-    .input("company", sql.NVarChar, data.company)
+    .input("company_id", sql.Int, data.company_id)
     .input("job_title", sql.NVarChar, data.job_title)
     .input("address", sql.NVarChar, data.address)
     .input("city", sql.NVarChar, data.city)
@@ -36,10 +46,10 @@ export async function createContact(data: ContactInput): Promise<Contact> {
     .input("notes", sql.NVarChar(sql.MAX), data.notes)
     .query<Contact>(
       `INSERT INTO contacts_tbl
-         (first_name, last_name, email, phone, company, job_title, address, city, state, zip, notes)
+         (first_name, last_name, email, phone, company_id, job_title, address, city, state, zip, notes)
        OUTPUT INSERTED.*
        VALUES
-         (@first_name, @last_name, @email, @phone, @company, @job_title, @address, @city, @state, @zip, @notes)`
+         (@first_name, @last_name, @email, @phone, @company_id, @job_title, @address, @city, @state, @zip, @notes)`
     );
   return result.recordset[0];
 }
@@ -56,7 +66,7 @@ export async function updateContact(
     .input("last_name", sql.NVarChar, data.last_name)
     .input("email", sql.NVarChar, data.email)
     .input("phone", sql.NVarChar, data.phone)
-    .input("company", sql.NVarChar, data.company)
+    .input("company_id", sql.Int, data.company_id)
     .input("job_title", sql.NVarChar, data.job_title)
     .input("address", sql.NVarChar, data.address)
     .input("city", sql.NVarChar, data.city)
@@ -66,7 +76,7 @@ export async function updateContact(
     .query<Contact>(
       `UPDATE contacts_tbl SET
          first_name = @first_name, last_name = @last_name, email = @email,
-         phone = @phone, company = @company, job_title = @job_title,
+         phone = @phone, company_id = @company_id, job_title = @job_title,
          address = @address, city = @city, state = @state, zip = @zip,
          notes = @notes, updated_at = GETDATE()
        OUTPUT INSERTED.*
